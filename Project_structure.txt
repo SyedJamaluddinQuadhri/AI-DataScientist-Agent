@@ -1,0 +1,50 @@
+ai-data-scientist-agent/
+├── backend/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── api/
+│   │   │   ├── __init__.py
+│   │   │   ├── endpoints/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── data.py
+│   │   │   │   ├── analysis.py
+│   │   │   │   └── modeling.py
+│   │   ├── core/
+│   │   │   ├── __init__.py
+│   │   │   ├── config.py
+│   │   │   ├── security.py
+│   │   │   └── exceptions.py
+│   │   ├── services/
+│   │   │   ├── __init__.py
+│   │   │   ├── data_processor.py
+│   │   │   ├── eda_engine.py
+│   │   │   ├── ml_engine.py
+│   │   │   ├── visualization_engine.py
+│   │   │   └── report_generator.py
+│   │   ├── models/
+│   │   │   ├── __init__.py
+│   │   │   ├── schemas.py
+│   │   │   └── database.py
+│   │   └── utils/
+│   │       ├── __init__.py
+│   │       ├── file_handlers.py
+│   │       └── ml_utils.py
+│   ├── requirements.txt
+│   └── Dockerfile
+├── frontend/
+│   ├── streamlit_app.py
+│   ├── components/
+│   │   ├── __init__.py
+│   │   ├── data_upload.py
+│   │   ├── analysis_dashboard.py
+│   │   ├── visualization_panel.py
+│   │   └── model_results.py
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   ├── api_client.py
+│   │   └── plotting_utils.py
+│   └── requirements.txt
+├── docker-compose.yml
+├── README.md
+└── .gitignore

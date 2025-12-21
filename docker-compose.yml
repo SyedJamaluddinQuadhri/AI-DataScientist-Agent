@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database (instead of SQLite)
+  db:
+    image: postgres:15-alpine
+    container_name: ai_ds_database
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ai_ds_agent
+      POSTGRES_USER: ai_user
+      POSTGRES_PASSWORD: secure_password_123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ai_user -d ai_ds_agent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: ai_ds_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build: ./backend
+    container_name: ai_ds_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://ai_user:secure_password_123@db:5432/ai_ds_agent
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SECRET_KEY=your_secret_key_here_change_this
+      - MAX_UPLOAD_SIZE=104857600
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./uploads:/app/uploads
+      - ./models:/app/models
+      - ./logs:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Frontend Streamlit App
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ai_ds_frontend
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend
+    command: streamlit run streamlit_app.py --server.port 8501 --server.address 0.0.0.0
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+    driver: bridge
