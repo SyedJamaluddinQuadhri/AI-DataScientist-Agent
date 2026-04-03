@@ -17,7 +17,12 @@ from sklearn.preprocessing import StandardScaler
 import xgboost as xgb
 import lightgbm as lgb
 import optuna
-import shap
+try:
+    import shap
+    SHAP_AVAILABLE = True
+except ImportError:
+    shap = None
+    SHAP_AVAILABLE = False
 import joblib
 import pickle
 from typing import Dict, List, Any, Tuple, Optional
@@ -68,24 +73,28 @@ class MLEngine:
         # Hyperparameter spaces for optimization
         self.hyperparameter_spaces = {
             'random_forest': {
-                'n_estimators': (50, 500),
-                'max_depth': (3, 20),
-                'min_samples_split': (2, 20),
-                'min_samples_leaf': (1, 10)
+                'n_estimators': (50, 300),
+                'max_depth': (3, 10),
+                'min_samples_split': (5, 20),
+                'min_samples_leaf': (2, 10)
             },
             'xgboost': {
-                'n_estimators': (50, 500),
-                'max_depth': (3, 12),
-                'learning_rate': (0.01, 0.3),
-                'subsample': (0.6, 1.0),
-                'colsample_bytree': (0.6, 1.0)
+                'n_estimators': (50, 300),
+                'max_depth': (3, 8),
+                'learning_rate': (0.01, 0.2),
+                'subsample': (0.6, 0.9),
+                'colsample_bytree': (0.6, 0.9),
+                'reg_alpha': (0.1, 10.0),
+                'reg_lambda': (0.1, 10.0)
             },
             'lightgbm': {
-                'n_estimators': (50, 500),
-                'max_depth': (3, 12),
-                'learning_rate': (0.01, 0.3),
-                'feature_fraction': (0.6, 1.0),
-                'bagging_fraction': (0.6, 1.0)
+                'n_estimators': (50, 300),
+                'max_depth': (3, 8),
+                'learning_rate': (0.01, 0.2),
+                'feature_fraction': (0.6, 0.9),
+                'bagging_fraction': (0.6, 0.9),
+                'reg_alpha': (0.1, 10.0),
+                'reg_lambda': (0.1, 10.0)
             }
         }
     
@@ -304,7 +313,7 @@ class MLEngine:
             if best_model:
                 import uuid
                 model_id = str(uuid.uuid4())
-                self._save_model(model_results[best_model]['model'], scaler, model_id)
+                self._save_model(model_results[best_model]['model'], scaler, model_id, ml_report)
                 ml_report['model_id'] = model_id
             
             return ml_report
@@ -482,6 +491,8 @@ class MLEngine:
     
     def _get_shap_values(self, model, X_sample: np.ndarray) -> Dict[str, Any]:
         """Calculate SHAP values for model interpretability"""
+        if not globals().get('SHAP_AVAILABLE', False):
+            return {}
         try:
             # Create SHAP explainer
             explainer = shap.Explainer(model, X_sample)
@@ -557,7 +568,7 @@ class MLEngine:
         
         return recommendations
     
-    def _save_model(self, model, scaler, model_id: str):
+    def _save_model(self, model, scaler, model_id: str, ml_report: Dict = None):
         """Save trained model and scaler"""
         model_dir = Path(f"models/{model_id}")
         model_dir.mkdir(parents=True, exist_ok=True)
@@ -577,6 +588,32 @@ class MLEngine:
         
         with open(model_dir / "metadata.json", 'w') as f:
             json.dump(metadata, f, indent=2)
+            
+        # Save results/report
+        if ml_report:
+            def convert_numpy_types(obj):
+                if isinstance(obj, np.integer):
+                    return int(obj)
+                elif isinstance(obj, np.floating):
+                    return float(obj)
+                elif isinstance(obj, (np.bool_, bool)):
+                    return bool(obj)
+                elif isinstance(obj, np.ndarray):
+                    return obj.tolist()
+                elif isinstance(obj, dict):
+                    return {key: convert_numpy_types(value) for key, value in obj.items()}
+                elif isinstance(obj, list):
+                    return [convert_numpy_types(item) for item in obj]
+                elif isinstance(obj, tuple):
+                    return tuple(convert_numpy_types(item) for item in obj)
+                elif pd.isna(obj):
+                    return None
+                else:
+                    return obj
+
+            safe_report = convert_numpy_types(ml_report)
+            with open(model_dir / "results.json", 'w') as f:
+                json.dump(safe_report, f, indent=2)
         
         logger.info(f"Model saved with ID: {model_id}")
     

@@ -27,6 +27,8 @@ def convert_numpy_types(obj):
         return int(obj)
     elif isinstance(obj, np.floating):
         return float(obj)
+    elif isinstance(obj, (np.bool_, bool)):
+        return bool(obj)
     elif isinstance(obj, np.ndarray):
         return obj.tolist()
     elif isinstance(obj, dict):
@@ -46,7 +48,8 @@ async def generate_report(
     dataset_id: str,
     format_type: str = "pdf",
     include_eda: bool = True,
-    include_modeling: bool = True
+    include_modeling: bool = True,
+    model_id: str = None
 ):
     """Generate comprehensive report in specified format"""
     try:
@@ -105,12 +108,25 @@ async def generate_report(
         from app.services.report_generator import ReportGenerator
         report_generator = ReportGenerator()
         
+        # Load model results if requested
+        models_results_data = {}
+        if include_modeling and model_id:
+            try:
+                model_dir = Path(f"models/{model_id}")
+                if (model_dir / "results.json").exists():
+                    import json
+                    with open(model_dir / "results.json", 'r') as f:
+                        models_results_data = json.load(f)
+                        logger.info(f"Loaded model results for {model_id}")
+            except Exception as e:
+                logger.warning(f"Could not load model results for {model_id}: {str(e)}")
+
         # Generate report
         logger.info(f"Generating {format_type} report...")
         report = report_generator.generate_comprehensive_report(
             dataset_info=report_data['dataset_info'],
             eda_results=report_data.get('eda_results', {}),
-            model_results={},
+            model_results=models_results_data,
             format_type=format_type
         )
         
@@ -248,10 +264,10 @@ async def get_dataset_summary(dataset_id: str):
             "basic_statistics": df.describe(include='all').to_dict()
         }
         
-        return {
+        return convert_numpy_types({
             "dataset_id": dataset_id,
             "summary": summary
-        }
+        })
         
     except Exception as e:
         logger.error(f"Error getting dataset summary: {str(e)}")
@@ -296,7 +312,7 @@ async def get_correlations(dataset_id: str):
                         'correlation': round(corr_val, 3)
                     })
         
-        return {
+        return convert_numpy_types({
             "dataset_id": dataset_id,
             "correlation_matrix": correlation_matrix.round(3).to_dict(),
             "highly_correlated_pairs": high_corr_pairs,
@@ -305,7 +321,7 @@ async def get_correlations(dataset_id: str):
                 "min_correlation": float(correlation_matrix.min().min()),
                 "mean_abs_correlation": float(correlation_matrix.abs().mean().mean())
             }
-        }
+        })
         
     except Exception as e:
         logger.error(f"Error getting correlations: {str(e)}")
@@ -352,11 +368,11 @@ async def detect_outliers(dataset_id: str):
                 'outlier_values': outliers.head(20).tolist()
             }
         
-        return {
+        return convert_numpy_types({
             "dataset_id": dataset_id,
             "outlier_analysis": outlier_analysis,
             "total_outliers": sum(analysis['outlier_count'] for analysis in outlier_analysis.values())
-        }
+        })
         
     except Exception as e:
         logger.error(f"Error detecting outliers: {str(e)}")
@@ -395,10 +411,10 @@ async def custom_analysis(dataset_id: str, prompt: str):
             }
         }
         
-        return {
+        return convert_numpy_types({
             "dataset_id": dataset_id,
             "custom_analysis": analysis_results
-        }
+        })
         
     except Exception as e:
         logger.error(f"Error in custom analysis: {str(e)}")

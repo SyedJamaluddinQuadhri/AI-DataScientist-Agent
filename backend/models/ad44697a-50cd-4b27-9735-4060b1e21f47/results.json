@@ -1,0 +1,450 @@
+{
+  "task_type": "classification",
+  "target_column": "loan_approved",
+  "feature_columns": [
+    "applicant_id",
+    "age",
+    "employment_type",
+    "years_employed",
+    "annual_income_lakhs",
+    "monthly_income_lakhs",
+    "dependents",
+    "state",
+    "property_area",
+    "cibil_score",
+    "credit_history_years",
+    "no_of_existing_loans",
+    "existing_emi_lakhs",
+    "previous_defaults",
+    "bankruptcies",
+    "loan_type",
+    "loan_purpose",
+    "loan_amount_lakhs",
+    "tenure_months",
+    "interest_rate_pct",
+    "ltv_ratio",
+    "collateral_value_lakhs",
+    "priority_sector",
+    "emi_lakhs",
+    "foir",
+    "loan_to_income_ratio",
+    "age_at_loan_maturity",
+    "sanctioned_amount_lakhs",
+    "internal_score"
+  ],
+  "dataset_info": {
+    "total_samples": 50000,
+    "train_size": 40000,
+    "test_size": 10000,
+    "n_features": 29,
+    "cv_folds_used": 5,
+    "classes_removed": []
+  },
+  "model_results": {
+    "random_forest": {
+      "model": null,
+      "performance_metrics": {
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "train_accuracy": 1.0,
+        "confusion_matrix": [
+          [
+            7237,
+            0
+          ],
+          [
+            0,
+            2763
+          ]
+        ]
+      },
+      "feature_importance": {
+        "sanctioned_amount_lakhs": 0.3558421613634525,
+        "internal_score": 0.23043912473483685,
+        "foir": 0.16884464510638983,
+        "emi_lakhs": 0.07836093948158777,
+        "loan_to_income_ratio": 0.056192913785098234,
+        "loan_amount_lakhs": 0.0383399341860769,
+        "collateral_value_lakhs": 0.01803113980609972,
+        "previous_defaults": 0.017315176235644273,
+        "cibil_score": 0.009106538025867047,
+        "annual_income_lakhs": 0.006508319170398704,
+        "loan_purpose": 0.006480274938418333,
+        "monthly_income_lakhs": 0.004646854140290256,
+        "loan_type": 0.004015969116840574,
+        "tenure_months": 0.003875644556644343,
+        "priority_sector": 0.00042555299088401687,
+        "bankruptcies": 0.0003705588513040461,
+        "ltv_ratio": 0.0003123520407853507,
+        "existing_emi_lakhs": 0.00025098054938028853,
+        "employment_type": 0.00014782976761943588,
+        "interest_rate_pct": 0.00014624770887605658,
+        "no_of_existing_loans": 0.00014469892253333628,
+        "age_at_loan_maturity": 0.00010254579175131088,
+        "credit_history_years": 4.5801722966038514e-05,
+        "applicant_id": 2.6715775971524392e-05,
+        "years_employed": 1.6399215871099347e-05,
+        "age": 1.0328727348635077e-05,
+        "dependents": 3.3766046900883056e-07,
+        "property_area": 1.5626594645131806e-08,
+        "state": 0.0
+      },
+      "hyperparameters": {
+        "bootstrap": true,
+        "ccp_alpha": 0.0,
+        "class_weight": null,
+        "criterion": "gini",
+        "max_depth": 4,
+        "max_features": "sqrt",
+        "max_leaf_nodes": null,
+        "max_samples": null,
+        "min_impurity_decrease": 0.0,
+        "min_samples_leaf": 4,
+        "min_samples_split": 16,
+        "min_weight_fraction_leaf": 0.0,
+        "n_estimators": 180,
+        "n_jobs": null,
+        "oob_score": false,
+        "random_state": null,
+        "verbose": 0,
+        "warm_start": false
+      }
+    },
+    "xgboost": {
+      "model": null,
+      "performance_metrics": {
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "train_accuracy": 0.999975,
+        "confusion_matrix": [
+          [
+            7237,
+            0
+          ],
+          [
+            0,
+            2763
+          ]
+        ]
+      },
+      "feature_importance": {
+        "sanctioned_amount_lakhs": 0.8796393275260925,
+        "internal_score": 0.08286505937576294,
+        "previous_defaults": 0.012140239588916302,
+        "loan_amount_lakhs": 0.011467666365206242,
+        "loan_to_income_ratio": 0.0042944117449223995,
+        "cibil_score": 0.003424795577302575,
+        "foir": 0.0029527132865041494,
+        "age": 0.0007101712399162352,
+        "emi_lakhs": 0.0004586489521898329,
+        "existing_emi_lakhs": 0.00044776147115044296,
+        "age_at_loan_maturity": 0.00043357774848118424,
+        "applicant_id": 0.0004253238730598241,
+        "no_of_existing_loans": 0.0002891455078497529,
+        "bankruptcies": 0.00024908228078857064,
+        "tenure_months": 0.00012163998326286674,
+        "ltv_ratio": 3.422745066927746e-05,
+        "credit_history_years": 2.1693038434023038e-05,
+        "years_employed": 1.4945267139410134e-05,
+        "interest_rate_pct": 9.607547326595522e-06,
+        "employment_type": 0.0,
+        "annual_income_lakhs": 0.0,
+        "monthly_income_lakhs": 0.0,
+        "dependents": 0.0,
+        "state": 0.0,
+        "property_area": 0.0,
+        "loan_type": 0.0,
+        "loan_purpose": 0.0,
+        "collateral_value_lakhs": 0.0,
+        "priority_sector": 0.0
+      },
+      "hyperparameters": {
+        "objective": "binary:logistic",
+        "base_score": null,
+        "booster": null,
+        "callbacks": null,
+        "colsample_bylevel": null,
+        "colsample_bynode": null,
+        "colsample_bytree": 0.894840045382761,
+        "device": null,
+        "early_stopping_rounds": null,
+        "enable_categorical": false,
+        "eval_metric": null,
+        "feature_types": null,
+        "gamma": null,
+        "grow_policy": null,
+        "importance_type": null,
+        "interaction_constraints": null,
+        "learning_rate": 0.12763443679291012,
+        "max_bin": null,
+        "max_cat_threshold": null,
+        "max_cat_to_onehot": null,
+        "max_delta_step": null,
+        "max_depth": 7,
+        "max_leaves": null,
+        "min_child_weight": null,
+        "missing": null,
+        "monotone_constraints": null,
+        "multi_strategy": null,
+        "n_estimators": 179,
+        "n_jobs": null,
+        "num_parallel_tree": null,
+        "random_state": null,
+        "reg_alpha": 5.5845762223198845,
+        "reg_lambda": 3.226781343928254,
+        "sampling_method": null,
+        "scale_pos_weight": null,
+        "subsample": 0.7664845664534123,
+        "tree_method": null,
+        "validate_parameters": null,
+        "verbosity": null
+      }
+    },
+    "logistic_regression": {
+      "model": null,
+      "performance_metrics": {
+        "accuracy": 0.9986,
+        "precision": 0.9986009293773929,
+        "recall": 0.9986,
+        "f1_score": 0.9985992142563753,
+        "train_accuracy": 0.998525,
+        "confusion_matrix": [
+          [
+            7235,
+            2
+          ],
+          [
+            12,
+            2751
+          ]
+        ]
+      },
+      "feature_importance": {
+        "sanctioned_amount_lakhs": 18.56245296840283,
+        "loan_amount_lakhs": 6.251413143239839,
+        "emi_lakhs": 5.649870899298767,
+        "internal_score": 4.286509467201227,
+        "loan_to_income_ratio": 4.008051876449955,
+        "foir": 3.3074329569532663,
+        "collateral_value_lakhs": 1.900578380899583,
+        "previous_defaults": 0.9459697174649182,
+        "priority_sector": 0.6196505570241057,
+        "tenure_months": 0.510992990846964,
+        "loan_type": 0.3988634251972724,
+        "age": 0.21161287546560642,
+        "age_at_loan_maturity": 0.21105190833348536,
+        "bankruptcies": 0.13402521334258188,
+        "no_of_existing_loans": 0.13092107137246925,
+        "interest_rate_pct": 0.12776261374293085,
+        "cibil_score": 0.1167164330757881,
+        "existing_emi_lakhs": 0.09319400477256946,
+        "monthly_income_lakhs": 0.07606096347394893,
+        "annual_income_lakhs": 0.07595134403069341,
+        "years_employed": 0.07405872593741825,
+        "loan_purpose": 0.04880116032475477,
+        "employment_type": 0.047076693683589965,
+        "property_area": 0.04582274796277938,
+        "applicant_id": 0.036915141445777386,
+        "dependents": 0.02635763171261482,
+        "state": 0.023479985509214926,
+        "ltv_ratio": 0.02043795166303206,
+        "credit_history_years": 0.016027787078500142
+      },
+      "hyperparameters": {
+        "C": 1.0,
+        "class_weight": null,
+        "dual": false,
+        "fit_intercept": true,
+        "intercept_scaling": 1,
+        "l1_ratio": null,
+        "max_iter": 100,
+        "multi_class": "auto",
+        "n_jobs": null,
+        "penalty": "l2",
+        "random_state": 42,
+        "solver": "lbfgs",
+        "tol": 0.0001,
+        "verbose": 0,
+        "warm_start": false
+      }
+    },
+    "gradient_boosting": {
+      "model": null,
+      "performance_metrics": {
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "train_accuracy": 1.0,
+        "confusion_matrix": [
+          [
+            7237,
+            0
+          ],
+          [
+            0,
+            2763
+          ]
+        ]
+      },
+      "feature_importance": {
+        "sanctioned_amount_lakhs": 0.9999999999997609,
+        "loan_to_income_ratio": 6.4202585127845e-14,
+        "loan_amount_lakhs": 4.6260396915759583e-14,
+        "collateral_value_lakhs": 2.869991914819057e-14,
+        "monthly_income_lakhs": 2.4597859043582266e-14,
+        "applicant_id": 1.8485942800743962e-14,
+        "ltv_ratio": 1.619613755981905e-14,
+        "foir": 1.491826732764058e-14,
+        "annual_income_lakhs": 1.4169202085221774e-14,
+        "emi_lakhs": 1.1955973883356192e-14,
+        "age": 0.0,
+        "employment_type": 0.0,
+        "years_employed": 0.0,
+        "dependents": 0.0,
+        "state": 0.0,
+        "property_area": 0.0,
+        "cibil_score": 0.0,
+        "credit_history_years": 0.0,
+        "no_of_existing_loans": 0.0,
+        "previous_defaults": 0.0,
+        "bankruptcies": 0.0,
+        "loan_type": 0.0,
+        "loan_purpose": 0.0,
+        "tenure_months": 0.0,
+        "priority_sector": 0.0,
+        "age_at_loan_maturity": 0.0,
+        "internal_score": 0.0,
+        "existing_emi_lakhs": -5.1605390510435444e-18,
+        "interest_rate_pct": -2.7627226793814014e-16
+      },
+      "hyperparameters": {
+        "ccp_alpha": 0.0,
+        "criterion": "friedman_mse",
+        "init": null,
+        "learning_rate": 0.1,
+        "loss": "log_loss",
+        "max_depth": 3,
+        "max_features": null,
+        "max_leaf_nodes": null,
+        "min_impurity_decrease": 0.0,
+        "min_samples_leaf": 1,
+        "min_samples_split": 2,
+        "min_weight_fraction_leaf": 0.0,
+        "n_estimators": 100,
+        "n_iter_no_change": null,
+        "random_state": 42,
+        "subsample": 1.0,
+        "tol": 0.0001,
+        "validation_fraction": 0.1,
+        "verbose": 0,
+        "warm_start": false
+      }
+    }
+  },
+  "best_model": "random_forest",
+  "model_comparison": {
+    "ranking": [
+      {
+        "algorithm": "random_forest",
+        "primary_metric": 1.0,
+        "all_metrics": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0,
+          "train_accuracy": 1.0,
+          "confusion_matrix": [
+            [
+              7237,
+              0
+            ],
+            [
+              0,
+              2763
+            ]
+          ]
+        }
+      },
+      {
+        "algorithm": "xgboost",
+        "primary_metric": 1.0,
+        "all_metrics": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0,
+          "train_accuracy": 0.999975,
+          "confusion_matrix": [
+            [
+              7237,
+              0
+            ],
+            [
+              0,
+              2763
+            ]
+          ]
+        }
+      },
+      {
+        "algorithm": "gradient_boosting",
+        "primary_metric": 1.0,
+        "all_metrics": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0,
+          "train_accuracy": 1.0,
+          "confusion_matrix": [
+            [
+              7237,
+              0
+            ],
+            [
+              0,
+              2763
+            ]
+          ]
+        }
+      },
+      {
+        "algorithm": "logistic_regression",
+        "primary_metric": 0.9986,
+        "all_metrics": {
+          "accuracy": 0.9986,
+          "precision": 0.9986009293773929,
+          "recall": 0.9986,
+          "f1_score": 0.9985992142563753,
+          "train_accuracy": 0.998525,
+          "confusion_matrix": [
+            [
+              7235,
+              2
+            ],
+            [
+              12,
+              2751
+            ]
+          ]
+        }
+      }
+    ],
+    "best_algorithm": "random_forest",
+    "metric_comparison": {
+      "random_forest": 1.0,
+      "xgboost": 1.0,
+      "gradient_boosting": 1.0,
+      "logistic_regression": 0.9986
+    }
+  },
+  "recommendations": [
+    "High accuracy achieved. Check for overfitting with cross-validation.",
+    "XGBoost performed best. Consider further hyperparameter tuning.",
+    "Random Forest performed best. It provides good feature importance insights."
+  ]
+}

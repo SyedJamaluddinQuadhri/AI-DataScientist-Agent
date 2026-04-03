@@ -26,6 +26,8 @@ def convert_numpy_types(obj):
         return int(obj)
     elif isinstance(obj, np.floating):
         return float(obj)
+    elif isinstance(obj, (np.bool_, bool)):
+        return bool(obj)
     elif isinstance(obj, np.ndarray):
         return obj.tolist()
     elif isinstance(obj, dict):
@@ -140,14 +142,14 @@ async def get_dataset_info(dataset_id: str):
         df = data_processor.load_dataset(str(file_path))
         quality_report = data_processor.analyze_data_quality(df)
         
-        return {
+        return convert_numpy_types({
             "dataset_id": dataset_id,
             "shape": df.shape,
             "columns": df.columns.tolist(),
             "dtypes": df.dtypes.astype(str).to_dict(),
             "quality_report": quality_report,
             "preview": df.head(10).to_dict('records')
-        }
+        })
         
     except Exception as e:
         logger.error(f"Error getting dataset info: {str(e)}")
@@ -172,12 +174,12 @@ async def get_dataset_preview(dataset_id: str, rows: int = 10):
         df = data_processor.load_dataset(str(file_path))
         preview = df.head(rows).to_dict('records')
         
-        return {
+        return convert_numpy_types({
             "dataset_id": dataset_id,
             "preview": preview,
             "total_rows": len(df),
             "columns": df.columns.tolist()
-        }
+        })
         
     except Exception as e:
         logger.error(f"Error getting dataset preview: {str(e)}")
@@ -209,13 +211,13 @@ async def preprocess_dataset(dataset_id: str, target_column: Optional[str] = Non
         processed_path = Path(settings.UPLOAD_DIR) / f"{dataset_id}_processed.csv"
         df_processed.to_csv(processed_path, index=False)
         
-        return {
+        return convert_numpy_types({
             "dataset_id": dataset_id,
             "preprocessing_report": preprocessing_report,
             "processed_shape": df_processed.shape,
             "processed_columns": df_processed.columns.tolist(),
             "preview": df_processed.head(5).to_dict('records')
-        }
+        })
         
     except Exception as e:
         logger.error(f"Error preprocessing dataset: {str(e)}")
@@ -239,10 +241,10 @@ async def get_target_suggestions(dataset_id: str):
         df = data_processor.load_dataset(str(file_path))
         suggestions = data_processor.suggest_target_column(df)
         
-        return {
+        return convert_numpy_types({
             "dataset_id": dataset_id,
             "target_suggestions": suggestions
-        }
+        })
         
     except Exception as e:
         logger.error(f"Error getting suggestions: {str(e)}")

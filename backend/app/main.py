@@ -14,6 +14,7 @@ from app.api.endpoints import data, analysis, modeling
 from app.models.database import Base
 import json
 import numpy as np
+import pandas as pd
 from fastapi.encoders import jsonable_encoder
 
 # Custom JSON encoder for NumPy types
@@ -23,6 +24,8 @@ class NumpyEncoder(json.JSONEncoder):
             return int(obj)
         elif isinstance(obj, np.floating):
             return float(obj)
+        elif isinstance(obj, (np.bool_, bool)):
+            return bool(obj)
         elif isinstance(obj, np.ndarray):
             return obj.tolist()
         elif pd.isna(obj):
@@ -80,7 +83,7 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8501", "http://localhost:3000"],
+    allow_origins=["http://localhost:8501", "http://localhost:3000", "http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

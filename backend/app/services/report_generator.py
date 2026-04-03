@@ -12,7 +12,10 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pdfkit
+try:
+    import pdfkit
+except ImportError:
+    pdfkit = None
 import platform
 import os
 import markdown
